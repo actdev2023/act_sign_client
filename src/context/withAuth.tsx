@@ -7,6 +7,7 @@ const { API_URL } = config;
 
 const withAuth = (WrappedComponent: React.FC) => {
     const WrapperComponent: React.FC = (props: any) => {
+        
         const router = useRouter();
 
         useEffect(() => {

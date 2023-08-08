@@ -8,6 +8,7 @@ const { API_URL } = config;
 
 
 const LogoutPage: React.FC = () => {
+    
     const router = useRouter();
 
     useEffect(() => {
