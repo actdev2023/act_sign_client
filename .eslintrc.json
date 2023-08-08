@@ -14,6 +14,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "padding-line-between-statements": "off",
+    "no-empty=function": "off",
     // add new line above comment
     "lines-around-comment": [
       "off",
@@ -27,7 +28,7 @@
       }
     ],
     // add new line above return
-    "newline-before-return": "error",
+    "newline-before-return": "off",
     // add new line below import
     "import/newline-after-import": [
       "error",
