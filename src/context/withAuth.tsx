@@ -37,7 +37,7 @@ const withAuth = (WrappedComponent: React.FC) => {
             };
 
             checkAuth();
-        }, []);
+        }, [router]);
 
         return <WrappedComponent {...props} />;
     };
