@@ -27,8 +27,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import ServerSideToolbar from 'src/views/table/ServerSideToolbar'
 
 // ** Types Imports
-import { ThemeColor } from 'src/@core/layouts/types'
-import { DataGridRowType } from 'src/@fake-db/types'
+import { ThemeColor } from 'src/@core/layouts/types';
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
