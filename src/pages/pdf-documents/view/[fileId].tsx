@@ -9,6 +9,7 @@ import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import { AbilityContext } from 'src/layouts/components/acl/Can';
+import withAuth from 'src/context/withAuth';
 
 
 
@@ -366,4 +367,4 @@ function PDFDocumentView() {
 }
 
 
-export default PDFDocumentView
+export default withAuth(PDFDocumentView);

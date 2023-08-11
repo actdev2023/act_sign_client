@@ -1,8 +1,15 @@
 // ** React Imports
 import { useState, SyntheticEvent, Fragment } from 'react'
+import { useRouter } from "next/router";
+import { config } from "../.../../../../../configs/config";
+import Cookies from "js-cookie";
+
+
+const { API_URL } = config;
+
 
 // ** Next Import
-import { useRouter } from 'next/router'
+
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -78,9 +85,26 @@ const UserDropdown = (props: Props) => {
       color: 'text.primary'
     }
   }
+  
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     handleDropdownClose()
+
+    try {
+      await fetch(`${API_URL}/api/users/logout`, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+      });
+
+      Cookies.remove("jwt_token");
+      router.push("/login");
+  } catch (error) {
+      console.error("Error during logout:", error);
+  }
+
+
   }
 
   return (

@@ -146,8 +146,11 @@ const LoginPage = () => {
 
       if (response.ok) {
         const data = await response.json();
+        const { token, user } = data;
         console.log('token', data.token);
-        Cookies.set("jwt_token", data.token, { expires: 1, secure: true });
+        Cookies.set("jwt_token", token, { expires: 1, secure: true });
+
+        Cookies.set("user_id", user.id, { expires: 1, secure: true });
         
         router.push('/home');
       } else {

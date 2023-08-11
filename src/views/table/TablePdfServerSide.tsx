@@ -6,6 +6,7 @@ import { config } from "../../configs/config";
 import { fetchSignature } from 'src/lib/api';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import Cookies from "js-cookie";
 
 
 
@@ -187,6 +188,7 @@ const TablePdfServerSide: React.FC<FilesTableProps> = ({ onView }) => {
   const [signature, setSignature] = useState('');
   const [fileUrl, setFileUrl] = useState<string>('');
   const router = useRouter();
+  const userId = Cookies.get("user_id");
 
   function loadServerRows(currentPage: number, data: DataGridRowType[]) {
     return data.slice(currentPage * pageSize, (currentPage + 1) * pageSize)
@@ -195,7 +197,7 @@ const TablePdfServerSide: React.FC<FilesTableProps> = ({ onView }) => {
   const fetchTableData = useCallback(
     async (sort: SortType, query: string, column: string) => {
         try {
-            const response = await fetch(`${API_URL}/api/files?status=0&query=${query}&sort=${sort}&column=${column}`);
+            const response = await fetch(`${API_URL}/api/client/files?client=${userId}&status=0&query=${query}&sort=${sort}&column=${column}`);
             if (!response.ok) {
                 throw new Error('Error fetching table data');
             }

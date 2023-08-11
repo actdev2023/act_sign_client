@@ -7,6 +7,7 @@ import {Document, Page, pdfjs} from 'react-pdf';
 import { fetchSignature } from 'src/lib/api';
 import { config } from "../../configs/config";
 import TablePdfServerSide from 'src/views/table/TablePdfServerSide';
+import withAuth from 'src/context/withAuth';
 
 const { API_URL } = config;
 
@@ -46,18 +47,12 @@ function PDFDocumentPage() {
                 }
                 subtitle={
                     <Typography variant='body2'>
-                        Upload Documents
+                        Unsigned Documents
                     </Typography>
                 }
             />
 
-            <Grid item xs={6}>
-                <Link href="/pdf-documents/upload">
-                    <Button variant='contained' endIcon={<Icon icon='tabler:upload' />}>
-                    Upload PDF
-                    </Button>
-                </Link>
-            </Grid>
+            
             <Grid item xs={12}>
                 <TablePdfServerSide onView={handleViewClick} />
             </Grid>          
@@ -66,4 +61,4 @@ function PDFDocumentPage() {
 }
 
 
-export default PDFDocumentPage
+export default withAuth(PDFDocumentPage);

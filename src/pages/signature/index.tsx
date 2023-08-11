@@ -2,6 +2,8 @@ import React, { useState, ChangeEvent, FormEvent, useEffect, useContext } from '
 import { fetchSignature } from 'src/lib/api';
 import Image from 'next/image';
 import { config } from "../../configs/config";
+import Cookies from "js-cookie";
+import withAuth from 'src/context/withAuth';
 
 const { API_URL } = config;
 
@@ -28,11 +30,12 @@ const SignaturePage = () => {
  
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [signature, setSignature] = useState('');
+    const userId = Cookies.get("user_id");
     
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const signature = await fetchSignature('1');
+                const signature = await fetchSignature(`${userId}`);
                 setSignature(signature);
             } catch (error) {
                 console.error('Error fetching signature', error);
@@ -53,6 +56,7 @@ const SignaturePage = () => {
         if(selectedFile) {
             const formData = new FormData();
             formData.append('image', selectedFile);
+            formData.append('signatureId', userId as string);
 
             try{
                 const response = await fetch(`${API_URL}/upload`, {
@@ -84,4 +88,4 @@ const SignaturePage = () => {
 }
 
 
-export default SignaturePage
+export default withAuth(SignaturePage);

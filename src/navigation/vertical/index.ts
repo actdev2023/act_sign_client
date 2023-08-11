@@ -22,16 +22,6 @@ const navigation = (): VerticalNavItemsType => {
       title: 'Signature',
       path: '/signature',
       icon: 'tabler:signature',
-    },
-    {
-      path: '/users',
-      title: 'Users',
-      icon: 'tabler:users',
-    },
-    {
-      path: '/acl',
-      title: 'Access Control',
-      icon: 'tabler:shield',
     }
   ]
 }

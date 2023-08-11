@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback, ChangeEvent } from 'react'
 import { config } from "../../configs/config";
 import ActionsColumn from './ActionsColumn';
+import Cookies from "js-cookie";
 
 
 
@@ -161,6 +162,7 @@ const TablePdfSignedServerSide: React.FC<FilesTableProps> = ({ onView }) => {
   const [rows, setRows] = useState<DataGridRowType[]>([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [sortColumn, setSortColumn] = useState<string>('title')
+  const userId = Cookies.get("user_id");
 
   function loadServerRows(currentPage: number, data: DataGridRowType[]) {
     return data.slice(currentPage * pageSize, (currentPage + 1) * pageSize)
@@ -169,7 +171,7 @@ const TablePdfSignedServerSide: React.FC<FilesTableProps> = ({ onView }) => {
   const fetchTableData = useCallback(
     async (sort: SortType, query: string, column: string) => {
         try {
-            const response = await fetch(`${API_URL}/api/files?status=1&query=${query}&sort=${sort}&column=${column}`);
+            const response = await fetch(`${API_URL}/api/client/files?clientid=${userId}&status=1&query=${query}&sort=${sort}&column=${column}`);
             if (!response.ok) {
                 throw new Error('Error fetching table data');
             }

@@ -7,7 +7,8 @@ import {Document, Page, pdfjs} from 'react-pdf';
 import { fetchSignature } from 'src/lib/api';
 import { config } from "../../configs/config";
 import TablePdfSignedServerSide from 'src/views/table/TablePdfSignedServerSide';
-import { AbilityContext } from 'src/layouts/components/acl/Can';
+import Cookies from "js-cookie";
+import withAuth from 'src/context/withAuth';
 
 const { API_URL } = config;
 
@@ -26,7 +27,7 @@ import  Icon from 'src/@core/components/icon';
 
 
 function PDFDocumentSignedPage() {
-    const ability = useContext(AbilityContext)
+ 
     const router = useRouter();
 
    
@@ -59,9 +60,6 @@ function PDFDocumentSignedPage() {
         </Grid>
     )
 }
-PDFDocumentSignedPage.acl = {
-    action: 'read',
-    subject: 'pdf-signed-list'
-  }
 
-export default PDFDocumentSignedPage
+
+export default withAuth(PDFDocumentSignedPage);
