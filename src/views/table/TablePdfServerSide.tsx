@@ -264,7 +264,7 @@ const TablePdfServerSide: React.FC<FilesTableProps> = ({ onView }) => {
       const stampedBlobs: Blob[] = [];
 
       for (const pdfData2 of pdfDatas) {
-      const pdfBytes = await fetch(`http://localhost:8080/uploads/documents/${pdfData2.filename}`).then((response) => response.arrayBuffer());
+      const pdfBytes = await fetch(`${API_URL}/uploads/documents/${pdfData2.filename}`).then((response) => response.arrayBuffer());
       const pdfData = new Uint8Array(pdfBytes);
       if (!pdfData) return;
       const pdfDoc = await PDFDocument.load(pdfData);
