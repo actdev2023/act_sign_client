@@ -3,7 +3,7 @@ import React, {useRef, ChangeEvent, useState, useEffect, useCallback, Fragment, 
 import {PDFDocument, PDFImage, degrees} from 'pdf-lib';
 import {Document, Page, pdfjs } from 'react-pdf';
 import { fetchSignature } from 'src/lib/api';
-
+import Cookies from "js-cookie";
 import { config } from "../../../configs/config";
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-hot-toast';
@@ -34,7 +34,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import Icon from 'src/@core/components/icon';
 
 
-pdfjs.GlobalWorkerOptions.workerSrc = `http://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
 
 
 
@@ -46,7 +46,7 @@ const Img = styled('img')(({ theme }) => ({
 
 
 
-const fetchFileFromAPI = async (fileId: string): Promise<{ fileUrl: string; stampPosition: { x: number; y: number; width: number; height: number; }; dateTextPosition: { date_x: number; date_y: number; date_size: number; }; dateText: string; pageAllNumber:  boolean; page_start: number; page_end: number;  }> => {
+const fetchFileFromAPI = async (fileId: string): Promise<{ fileUrl: string; stampPosition: { x: number; y: number; width: number; height: number; rotate: number; }; dateTextPosition: { date_x: number; date_y: number; date_size: number; date_rotate: number; }; dateText: string; pageAllNumber:  boolean; page_start: number; page_end: number;  }> => {
     try {
 
         const response = await fetch(`${API_URL}/api/files/${fileId}`);
@@ -62,13 +62,15 @@ const fetchFileFromAPI = async (fileId: string): Promise<{ fileUrl: string; stam
             x: parseInt(fileData.x, 10),
             y:  parseInt(fileData.y, 10),
             width:  parseInt(fileData.width, 10),
-            height:  parseInt(fileData.height, 10)
+            height:  parseInt(fileData.height, 10),
+            rotate:  parseInt(fileData.rotate, 10),
         };
 
         const dateTextPosition = {
             date_x: parseInt(fileData.date_x, 10),
             date_y:  parseInt(fileData.date_y, 10),
-            date_size:  parseInt(fileData.date_size, 10)
+            date_size:  parseInt(fileData.date_size, 10),
+            date_rotate:  parseInt(fileData.date_rotate, 10),
         };
 
         
@@ -92,12 +94,13 @@ function PDFDocumentView() {
     const [numPages, setNumPages] = useState(0);
     const [fileUrl, setFileUrl] = useState<string>('');
     const [signature, setSignature] = useState('');
-    const [stampPosition, setStampPosition] = useState<{ x: number, y: number, width: number, height: number } | null>(null);
-    const [dateTextPosition, setDateTextPosition] = useState<{ date_x: number, date_y: number, date_size: number } | null>(null);
+    const [stampPosition, setStampPosition] = useState<{ x: number, y: number, width: number, height: number, rotate: number } | null>(null);
+    const [dateTextPosition, setDateTextPosition] = useState<{ date_x: number, date_y: number, date_size: number, date_rotate: number } | null>(null);
     const [dateText, setDateText] = useState<string>('');
     const [pageStart, setPageStart] = useState(0);
     const [pageEnd, setPageEnd] = useState(0);
     const [pageAllNumber, setPageAllNumber] = useState(false);
+    const userId = Cookies.get("user_id");
     
 
     const theme = useTheme();
@@ -110,11 +113,11 @@ function PDFDocumentView() {
 
     useEffect(() => {
         
-
+        pdfjs.GlobalWorkerOptions.workerSrc = `http://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
         fetchFileDetails();
         const fetchData = async () => {
             try {
-                const signature = await fetchSignature('1');
+                const signature = await fetchSignature(`${userId}`);
                 setSignature(signature);
             } catch (error) {
                 console.error('Error fetching signature', error);
@@ -152,7 +155,7 @@ function PDFDocumentView() {
                     return (
                         <div
                             className="stamp-preview"
-                            style={{ left: stampPosition?.x, top: stampPosition?.y, width: stampPosition?.width, height: stampPosition?.height, position: 'absolute', border: '2px dashed red' }}
+                            style={{ left: stampPosition?.x, top: stampPosition?.y, width: stampPosition?.width, height: stampPosition?.height, transform: `rotate(${stampPosition?.rotate}deg)`, position: 'absolute', border: '2px dashed red' }}
                         >
                             Your Signature
                         </div>
@@ -172,7 +175,7 @@ function PDFDocumentView() {
                     return (
                         <div
                     className="stamp-preview"
-                    style={{ left: dateTextPosition?.date_x, top: dateTextPosition?.date_y, fontSize: dateTextPosition?.date_size+'px', position: 'absolute', border: '2px dashed red' }}
+                    style={{ left: dateTextPosition?.date_x, top: dateTextPosition?.date_y, transform: `rotate(${dateTextPosition?.date_rotate}deg)`, fontSize: dateTextPosition?.date_size+'px', position: 'absolute', border: '2px dashed red' }}
                 >
                     {dateText}
                 </div>
@@ -213,24 +216,24 @@ function PDFDocumentView() {
                     const stamDims = stampImage2.scale(0.25);
                     const { width, height } = page.getSize();
                     if(stampPosition){
-                        const { x, y, width: stampWidth, height: stampHeight } = stampPosition;
+                        const { x, y, width: stampWidth, height: stampHeight, rotate } = stampPosition;
                     page.drawImage(stampImage2, {
                         x: x ?? 0,
                         y:height - (y ?? 0) - (stampHeight ?? 0),
                         width: stampWidth ?? 0,
                         height: stampHeight ?? 0,
-                        rotate: degrees(0),
+                        rotate: degrees(rotate ?? 0),
                         opacity: 0.8,
     
                     });
                     }
                     if(dateTextPosition){
-                        const { date_x, date_y, date_size: dateSize} = dateTextPosition;
+                        const { date_x, date_y, date_size: dateSize, date_rotate} = dateTextPosition;
                     page.drawText(dateText, {
                         x: date_x ?? 0,
                         y: height- (date_y ?? 0),
                         size: dateSize ?? 0,
-                        rotate: degrees(0),
+                        rotate: degrees(date_rotate ?? 0),
                         opacity: 1,
     
                     });
@@ -245,24 +248,24 @@ function PDFDocumentView() {
                     const stamDims = stampImage2.scale(0.25);
                     const { width, height } = page.getSize();
                     if(stampPosition){
-                        const { x, y, width: stampWidth, height: stampHeight } = stampPosition;
+                        const { x, y, width: stampWidth, height: stampHeight, rotate } = stampPosition;
                     page.drawImage(stampImage2, {
                         x: x ?? 0,
                         y:height - (y ?? 0) - (stampHeight ?? 0),
                         width: stampWidth ?? 0,
                         height: stampHeight ?? 0,
-                        rotate: degrees(0),
+                        rotate: degrees(rotate ?? 0),
                         opacity: 0.8,
 
                     });
                     }
                     if(dateTextPosition){
-                        const { date_x, date_y, date_size: dateSize} = dateTextPosition;
+                        const { date_x, date_y, date_size: dateSize, date_rotate} = dateTextPosition;
                     page.drawText(dateText, {
                         x: date_x ?? 0,
                         y: height- (date_y ?? 0),
                         size: dateSize ?? 0,
-                        rotate: degrees(0),
+                        rotate: degrees(date_rotate ?? 0),
                         opacity: 1,
     
                     });

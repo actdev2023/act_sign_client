@@ -22,6 +22,7 @@ const LogoutPage: React.FC = () => {
                 });
 
                 Cookies.remove("jwt_token");
+                Cookies.remove("user_id");
                 router.push("/login");
             } catch (error) {
                 console.error("Error during logout:", error);

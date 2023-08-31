@@ -58,6 +58,7 @@ const UserDropdown = (props: Props) => {
 
   // ** Hooks
   const router = useRouter()
+  const userName = Cookies.get("user_name");
   // ** Vars
   const { direction } = settings
 
@@ -147,8 +148,8 @@ const UserDropdown = (props: Props) => {
               <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
             </Badge>
             <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 500 }}>John Doe</Typography>
-              <Typography variant='body2'>Admin</Typography>
+              <Typography sx={{ fontWeight: 500 }}>{userName}</Typography>
+              <Typography variant='body2'>Client</Typography>
             </Box>
           </Box>
         </Box>

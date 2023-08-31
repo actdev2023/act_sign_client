@@ -151,6 +151,7 @@ const LoginPage = () => {
         Cookies.set("jwt_token", token, { expires: 1, secure: true });
 
         Cookies.set("user_id", user.id, { expires: 1, secure: true });
+        Cookies.set("user_name", user.username, { expires: 1, secure: true });
         
         router.push('/home');
       } else {
