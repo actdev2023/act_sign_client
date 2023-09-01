@@ -28,9 +28,9 @@ module.exports = {
     return config
   },
   images: {
-    domains: ['localhost'],
+    domains: ['https://isigndocu.com'],
   },
   serverRuntimeConfig: {
-    port: process.env.PORT,
+    port: 3001,
   }
 }
