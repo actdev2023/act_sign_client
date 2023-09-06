@@ -217,7 +217,7 @@ const TablePdfServerSide: React.FC<FilesTableProps> = ({ onView }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-          const signature = await fetchSignature('1');
+          const signature = await fetchSignature(`${userId}`);
           setSignature(signature);
       } catch (error) {
           console.error('Error fetching signature', error);
