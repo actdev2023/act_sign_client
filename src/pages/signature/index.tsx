@@ -19,7 +19,7 @@ const SignatureImage = ({ signature }: {signature: string }) => {
     return (
         <div>
             <h2>Your Signature</h2>
-            <Image src={`${API_URL}/uploads/${signature}`} alt="Signature" width={400} height={200} />
+            <img src={`${API_URL}/uploads/${signature}`} alt="Signature" width={400} height={200} />
         </div>
     )
 }
